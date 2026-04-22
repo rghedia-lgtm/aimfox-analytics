@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 
 app = Flask(__name__)
 PORT = int(os.getenv("DASHBOARD_PORT", 8080))
-CACHE_TTL = 120  # seconds
+CACHE_TTL = 30  # seconds
 
 _cache = {"data": None, "ts": 0}
 
