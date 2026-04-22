@@ -383,25 +383,32 @@ async function loadData() {
 function render() { renderTabs(); renderStats(); renderCampaigns(); renderLeads(); renderConvos(); }
 
 function renderTabs() {
-  let h = `<div class="tab ${activeAcc==='all'?'active':''}" onclick="setAcc('all')">
+  const sel = String(activeAcc);
+  let h = `<div class="tab ${sel==='all'?'active':''}" data-acc="all">
     <span class="dot-green"></span> All Accounts
   </div>`;
   for (const a of D.accounts) {
+    const aid = String(a.id);
     const init = (a.name||'?')[0].toUpperCase();
-    const av = a.picture
-      ? `<div class="tab-avatar"><img src="${a.picture}" onerror="this.parentElement.textContent='${init}'"></div>`
-      : `<div class="tab-avatar">${init}</div>`;
+    const avImg = a.picture ? `<img src="${a.picture}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">` : '';
+    const avFb  = `<span style="display:${a.picture?'none':'flex'};width:100%;height:100%;align-items:center;justify-content:center">${init}</span>`;
+    const av    = `<div class="tab-avatar">${avImg}${avFb}</div>`;
     const unread = a.stats.unread_messages > 0 ? `<span class="unread-pill">${a.stats.unread_messages}</span>` : '';
-    h += `<div class="tab ${activeAcc===a.id?'active':''}" onclick="setAcc('${a.id}')">
-      ${av} ${a.name.split(' ').slice(0,2).join(' ')} ${unread}
+    h += `<div class="tab ${sel===aid?'active':''}" data-acc="${aid}">
+      ${av}<span>${a.name.split(' ').slice(0,2).join(' ')}</span>${unread}
     </div>`;
   }
-  document.getElementById('account-tabs').innerHTML = h;
+  const container = document.getElementById('account-tabs');
+  container.innerHTML = h;
+  container.onclick = e => {
+    const tab = e.target.closest('[data-acc]');
+    if (tab) { e.stopPropagation(); setAcc(tab.dataset.acc); }
+  };
 }
 
 function curStats() {
   if (activeAcc === 'all') return D.overall;
-  return (D.accounts.find(a => a.id === activeAcc) || {stats: D.overall}).stats;
+  return (D.accounts.find(a => String(a.id) === String(activeAcc)) || {stats: D.overall}).stats;
 }
 
 function renderStats() {
