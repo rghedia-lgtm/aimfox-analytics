@@ -197,7 +197,6 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f1f5f9;color:#1e293b}
-/* Topbar */
 .topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .logo{font-size:17px;font-weight:700;color:#2563eb;letter-spacing:-.3px}
 .logo span{color:#1e293b}
@@ -207,18 +206,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .refresh-btn{background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
 .refresh-btn:hover{background:#1d4ed8}
 .refresh-btn:disabled{background:#94a3b8;cursor:not-allowed}
-/* Layout */
 .main{max-width:1380px;margin:0 auto;padding:24px 28px}
-.section-label{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-/* Account tabs */
-.account-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;background:#fff;padding:10px 12px;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.tab{padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:#64748b;border:1.5px solid transparent;transition:all .15s;display:flex;align-items:center;gap:7px;white-space:nowrap}
-.tab:hover{background:#f8fafc;color:#334155}
-.tab.active{background:#eff6ff;color:#2563eb;border-color:#bfdbfe;font-weight:700}
-.tab-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;background:#dbeafe;color:#2563eb;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.tab-avatar img{width:26px;height:26px;border-radius:50%}
-.dot-green{width:8px;height:8px;border-radius:50%;background:#22c55e}
-.unread-pill{background:#ef4444;color:#fff;border-radius:20px;padding:1px 6px;font-size:10px;font-weight:700;line-height:1.4}
+/* Filter bar */
+.filter-bar{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 18px;margin-bottom:24px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.filter-lbl{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+/* Account dropdown */
+.acc-dd{position:relative;min-width:240px}
+.acc-trigger{display:flex;align-items:center;gap:9px;padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;user-select:none;font-size:13px;font-weight:600;color:#1e293b;transition:border-color .15s,background .15s}
+.acc-trigger:hover,.acc-trigger.open{border-color:#2563eb;background:#eff6ff;color:#2563eb}
+.acc-tav{width:26px;height:26px;border-radius:50%;background:#dbeafe;color:#2563eb;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.acc-tav img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.acc-tname{flex:1}
+.dd-chev{flex-shrink:0;transition:transform .2s;color:#94a3b8}
+.acc-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:280px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:300;overflow:hidden;display:none}
+.acc-menu.open{display:block}
+.acc-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:#374151;transition:background .1s;border-bottom:1px solid #f8fafc}
+.acc-opt:last-child{border-bottom:none}
+.acc-opt:hover{background:#f1f5f9}
+.acc-opt.sel{background:#eff6ff;color:#2563eb}
+.acc-oav{width:32px;height:32px;border-radius:50%;background:#dbeafe;color:#2563eb;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.acc-oav img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.acc-oinfo{flex:1;min-width:0}
+.acc-oname{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-osub{font-size:11px;color:#94a3b8;margin-top:2px}
+.unread-pill{background:#ef4444;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;font-weight:700;line-height:1.5;flex-shrink:0}
 /* Stats */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 @media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
@@ -240,13 +251,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .card-head{padding:14px 18px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between}
 .card-head h3{font-size:14px;font-weight:700;color:#1e293b}
 .count-pill{font-size:12px;color:#64748b;background:#f1f5f9;padding:2px 10px;border-radius:20px;font-weight:600}
-/* Table */
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid #f1f5f9;background:#fafbfc;white-space:nowrap}
 td{padding:11px 14px;border-bottom:1px solid #f8fafc;color:#374151;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafbff}
-/* Badges */
 .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .b-active{background:#dcfce7;color:#16a34a}
 .b-done{background:#ede9fe;color:#7c3aed}
@@ -266,7 +275,7 @@ tr:hover td{background:#fafbff}
 .conv-occ{font-size:11px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .conv-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .chev{font-size:10px;color:#94a3b8;transition:transform .2s}
-.conv-body{display:none;padding:14px;background:#fff;border-top:1px solid #f1f5f9;max-height:360px;overflow-y:auto}
+.conv-body{display:none;padding:14px;background:#fff;border-top:1px solid #f1f5f9;max-height:380px;overflow-y:auto}
 .conv-body.open{display:block}
 .msg-row{display:flex;gap:8px;margin-bottom:10px;align-items:flex-start}
 .msg-row.sent{flex-direction:row-reverse}
@@ -276,7 +285,6 @@ tr:hover td{background:#fafbff}
 .msg-row.sent .msg-bubble{background:#eff6ff;color:#1e40af;border-bottom-right-radius:3px}
 .msg-meta{font-size:10px;color:#94a3b8;margin-bottom:3px}
 .auto-tag{color:#7c3aed;font-weight:600}
-/* Loader */
 #loading{position:fixed;inset:0;background:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px}
 .spinner{width:42px;height:42px;border:3px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -306,10 +314,30 @@ tr:hover td{background:#fafbff}
 <div class="main">
   <div id="err"></div>
 
-  <div class="section-label">Filter by Account</div>
-  <div class="account-tabs" id="account-tabs"></div>
+  <!-- Account dropdown filter -->
+  <div class="filter-bar">
+    <span class="filter-lbl">Filter by Account</span>
+    <div class="acc-dd" id="acc-dd">
+      <div class="acc-trigger" id="acc-trigger">
+        <div class="acc-tav" id="acc-tav"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block"></span></div>
+        <span class="acc-tname" id="acc-tname">All Accounts</span>
+        <svg class="dd-chev" id="dd-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="acc-menu" id="acc-menu"></div>
+    </div>
+  </div>
 
+  <!-- Stats cards -->
   <div class="stats-grid" id="stats-grid"></div>
+
+  <!-- Conversations (right after stats) -->
+  <div class="card">
+    <div class="card-head">
+      <h3>Conversations</h3>
+      <span class="count-pill" id="conv-count"></span>
+    </div>
+    <div class="conv-list" id="conv-list"></div>
+  </div>
 
   <!-- Campaigns -->
   <div class="card">
@@ -339,15 +367,6 @@ tr:hover td{background:#fafbff}
       </tr></thead>
       <tbody id="leads-body"></tbody>
     </table>
-  </div>
-
-  <!-- Conversations -->
-  <div class="card">
-    <div class="card-head">
-      <h3>Conversations</h3>
-      <span class="count-pill" id="conv-count"></span>
-    </div>
-    <div class="conv-list" id="conv-list"></div>
   </div>
 </div>
 
@@ -380,29 +399,74 @@ async function loadData() {
   }
 }
 
-function render() { renderTabs(); renderStats(); renderCampaigns(); renderLeads(); renderConvos(); }
+document.addEventListener('click', () => {
+  document.getElementById('acc-menu')?.classList.remove('open');
+  document.getElementById('acc-trigger')?.classList.remove('open');
+  const chev = document.getElementById('dd-chev');
+  if (chev) chev.style.transform = '';
+});
 
-function renderTabs() {
+function render() { renderDropdown(); renderStats(); renderConvos(); renderCampaigns(); renderLeads(); }
+
+function renderDropdown() {
   const sel = String(activeAcc);
-  let h = `<div class="tab ${sel==='all'?'active':''}" data-acc="all">
-    <span class="dot-green"></span> All Accounts
+  // Build menu
+  let opts = `<div class="acc-opt ${sel==='all'?'sel':''}" data-acc="all">
+    <div class="acc-oav"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block"></span></div>
+    <div class="acc-oinfo"><div class="acc-oname">All Accounts</div><div class="acc-osub">${D.accounts.length} accounts</div></div>
   </div>`;
   for (const a of D.accounts) {
     const aid = String(a.id);
     const init = (a.name||'?')[0].toUpperCase();
-    const avImg = a.picture ? `<img src="${a.picture}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">` : '';
-    const avFb  = `<span style="display:${a.picture?'none':'flex'};width:100%;height:100%;align-items:center;justify-content:center">${init}</span>`;
-    const av    = `<div class="tab-avatar">${avImg}${avFb}</div>`;
+    const avHtml = a.picture
+      ? `<img src="${a.picture}" onerror="this.style.display='none'">`
+      : init;
     const unread = a.stats.unread_messages > 0 ? `<span class="unread-pill">${a.stats.unread_messages}</span>` : '';
-    h += `<div class="tab ${sel===aid?'active':''}" data-acc="${aid}">
-      ${av}<span>${a.name.split(' ').slice(0,2).join(' ')}</span>${unread}
+    opts += `<div class="acc-opt ${sel===aid?'sel':''}" data-acc="${aid}">
+      <div class="acc-oav">${avHtml}</div>
+      <div class="acc-oinfo">
+        <div class="acc-oname">${a.name}</div>
+        <div class="acc-osub">${a.stats.active_conversations} convos &middot; ${a.stats.messages_sent} msgs sent</div>
+      </div>
+      ${unread}
     </div>`;
   }
-  const container = document.getElementById('account-tabs');
-  container.innerHTML = h;
-  container.onclick = e => {
-    const tab = e.target.closest('[data-acc]');
-    if (tab) { e.stopPropagation(); setAcc(tab.dataset.acc); }
+  document.getElementById('acc-menu').innerHTML = opts;
+
+  // Update trigger
+  const tav = document.getElementById('acc-tav');
+  const tname = document.getElementById('acc-tname');
+  if (sel === 'all') {
+    tav.innerHTML = `<span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block"></span>`;
+    tname.textContent = 'All Accounts';
+  } else {
+    const acc = D.accounts.find(a => String(a.id) === sel);
+    if (acc) {
+      const init = (acc.name||'?')[0].toUpperCase();
+      tav.innerHTML = acc.picture ? `<img src="${acc.picture}" style="width:26px;height:26px;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='${init}'">` : init;
+      tname.textContent = acc.name.split(' ').slice(0,2).join(' ');
+    }
+  }
+
+  // Wire dropdown toggle (idempotent)
+  const trigger = document.getElementById('acc-trigger');
+  trigger.onclick = e => {
+    e.stopPropagation();
+    const menu = document.getElementById('acc-menu');
+    const chev = document.getElementById('dd-chev');
+    const isOpen = menu.classList.toggle('open');
+    trigger.classList.toggle('open', isOpen);
+    chev.style.transform = isOpen ? 'rotate(180deg)' : '';
+  };
+  document.getElementById('acc-menu').onclick = e => {
+    e.stopPropagation();
+    const opt = e.target.closest('[data-acc]');
+    if (opt) {
+      document.getElementById('acc-menu').classList.remove('open');
+      document.getElementById('acc-trigger').classList.remove('open');
+      document.getElementById('dd-chev').style.transform = '';
+      setAcc(opt.dataset.acc);
+    }
   };
 }
 
