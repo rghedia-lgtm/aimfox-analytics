@@ -12,6 +12,8 @@ Usage:
 """
 
 import argparse
+import os
+import shutil
 import sys
 from datetime import datetime
 
@@ -99,6 +101,9 @@ def main():
     # ── Always auto-save reports ───────────────────────────────────────────────
     step("Saving reports (JSON / CSV / HTML)", args.quiet)
     paths = save_all(accounts, campaign_rows, recent_leads, conversations)
+
+    # Keep index.html in sync for GitHub Pages
+    shutil.copy(os.path.join("reports", "report_latest.html"), "index.html")
 
     if not args.quiet:
         print(f"\n{Fore.GREEN}Reports saved to reports/{Style.RESET_ALL}")
